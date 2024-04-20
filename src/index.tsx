@@ -8,9 +8,7 @@ import {BrowserRouter} from 'react-router-dom'
 export const rerenderEntireTree = (state: StateType) => ReactDOM.render(<BrowserRouter>
     <App
         state={state}
-        addPost={store.addPost.bind(store)}
-        updateNewPostText={store.updateNewPostText.bind(store)}
-        addMessage={store.addMessage.bind(store)}
+        dispatch={store.dispatch.bind(store)}
     />
 </BrowserRouter>, document.getElementById('customRoot'))
 
@@ -18,16 +16,16 @@ rerenderEntireTree(store.getState())
 
 store.subscribe(rerenderEntireTree)
 
-let page = {
-    _content: '',
-    title: '',
-    setContent(content: string) {
-        this._content = content
-    },
-    getContent() {
-        return this._content
-    },
-    render: function () {
-        document.write(this._content)
-    },
-}
+// let page = {
+//     _content: '',
+//     title: '',
+//     setContent(content: string) {
+//         this._content = content
+//     },
+//     getContent() {
+//         return this._content
+//     },
+//     render: function () {
+//         document.write(this._content)
+//     },
+// }

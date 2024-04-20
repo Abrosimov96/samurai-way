@@ -24,13 +24,28 @@ export type FriendType = {
 
 export type StoreType = {
     _state: StateType
-    getState: () => StateType
     _callSubscriber: (state: StateType) => void
-    addPost: () => void
-    updateNewPostText: (newText: string) => void
-    addMessage: (message: MessageType) => void
+    getState: () => StateType
     subscribe: (observer: (state: StateType) => void) => void
+    dispatch: (action: ActionType) => void
 }
+
+export type ActionAddPostType = {
+    type: 'ADD-POST'
+}
+export type ActionUpdatePostType = {
+    type: 'UPDATE-NEW-POST-TEXT'
+    newText: string
+}
+export type ActionAddMessageType = {
+    type: 'ADD-MESSAGE'
+    newMessage: {
+        id: number,
+        message: string
+    }
+}
+
+export type ActionType = ActionAddPostType | ActionUpdatePostType | ActionAddMessageType
 
 export const store: StoreType = {
     _state: {
@@ -107,37 +122,43 @@ export const store: StoreType = {
             ],
         },
     } as StateType,
-
     _callSubscriber(state: StateType) {
-        console.log('State was changed!')
+        console.log('State was changed!', state)
     },
 
     getState() {
         return this._state
     },
-
     subscribe(observer: (state: StateType) => void) {
         this._callSubscriber = observer
     },
 
-    addPost() {
-        const newPost: PostPropsType = {
-            id: ++this._state.profilePage.posts.length,
-            message: this._state.profilePage.newPostText,
-            likesCount: 0,
-        }
+    dispatch(action: ActionType) {
+        switch (action.type) {
+            case 'ADD-POST': {
+                const newPost: PostPropsType = {
+                    id: ++this._state.profilePage.posts.length,
+                    message: this._state.profilePage.newPostText,
+                    likesCount: 0,
+                }
 
-        this._state.profilePage.posts.push(newPost)
-        this._state.profilePage.newPostText = ''
-        this._callSubscriber(this._state)
-    },
-    updateNewPostText(newText: string) {
-        this._state.profilePage.newPostText = newText
-        this._callSubscriber(this._state)
-    },
-    addMessage(message: MessageType) {
-        this._state.dialogsPage.messages.push(message)
-        this._callSubscriber(this._state)
+                this._state.profilePage.posts.push(newPost)
+                this._state.profilePage.newPostText = ''
+                this._callSubscriber(this._state)
+                break
+            }
+            case 'UPDATE-NEW-POST-TEXT': {
+                this._state.profilePage.newPostText = action.newText
+                this._callSubscriber(this._state)
+                break
+            }
+            case 'ADD-MESSAGE': {
+                this._state.dialogsPage.messages.push(action.newMessage)
+                this._callSubscriber(this._state)
+                break
+            }
+
+        }
     }
 }
 
