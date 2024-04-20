@@ -1,21 +1,28 @@
 import {PostPropsType} from '../components/Profile/Posts/Post/Post'
 import {DialogType, MessageType} from '../components/Dialogs/Dialogs'
-
-export type StateType = {
-    profilePage: ProfilePageType
-    dialogsPage: {
-        messages: MessageType[]
-        dialogs: DialogType[]
-        newMessageText: string
-    }
-    sidebar: {
-        friends: FriendType[]
-    }
-}
+import {ProfileActionType, profileReducer} from './profile-reducer';
+import {DialogsActionType, dialogsReducer} from './dialogs-reducer';
+import {sidebarReducer} from './sidebar-reducer';
 
 export type ProfilePageType = {
     posts: PostPropsType[]
     newPostText: string
+}
+export type DialogsPage = {
+    messages: MessageType[]
+    dialogs: DialogType[]
+    newMessageText: string
+}
+export type SidebarType = {
+    friends: FriendType[]
+}
+
+
+
+export type StateType = {
+    profilePage: ProfilePageType
+    dialogsPage: DialogsPage
+    sidebar: SidebarType
 }
 
 export type FriendType = {
@@ -31,26 +38,7 @@ export type StoreType = {
     dispatch: (action: ActionType) => void
 }
 
-export type ActionAddPostType = {
-    type: 'ADD-POST'
-}
-export type ActionUpdatePostType = {
-    type: 'UPDATE-NEW-POST-TEXT'
-    newText: string
-}
-export type ActionAddMessageType = {
-    type: 'ADD-MESSAGE'
-    newMessage: {
-        id: number,
-        message: string
-    }
-}
-export type ActionUpdateMessageType = {
-    type: 'UPDATE-MESSAGE-TEXT'
-    newMessageText: string
-}
-
-export type ActionType = ActionAddPostType | ActionUpdatePostType | ActionAddMessageType | ActionUpdateMessageType
+export type ActionType = ProfileActionType | DialogsActionType
 
 export const store: StoreType = {
     _state: {
@@ -140,66 +128,12 @@ export const store: StoreType = {
     },
 
     dispatch(action: ActionType) {
-        switch (action.type) {
-            case 'ADD-POST': {
-                const newPost: PostPropsType = {
-                    id: ++this._state.profilePage.posts.length,
-                    message: this._state.profilePage.newPostText,
-                    likesCount: 0,
-                }
-
-                this._state.profilePage.posts.push(newPost)
-                this._state.profilePage.newPostText = ''
-                this._callSubscriber(this._state)
-                break
-            }
-            case 'UPDATE-NEW-POST-TEXT': {
-                this._state.profilePage.newPostText = action.newText
-                this._callSubscriber(this._state)
-                break
-            }
-            case 'UPDATE-MESSAGE-TEXT': {
-                this._state.dialogsPage.newMessageText = action.newMessageText
-                this._callSubscriber(this._state)
-                break
-            }
-            case 'ADD-MESSAGE': {
-                this._state.dialogsPage.messages.push(action.newMessage)
-                this._state.dialogsPage.newMessageText = ''
-                this._callSubscriber(this._state)
-                break
-            }
-            default:
-                return this._state
-        }
+        this._state.profilePage = profileReducer(this._state.profilePage, action as ProfileActionType)
+        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action as DialogsActionType)
+        this._state.sidebar = sidebarReducer(this._state.sidebar, action)
+        this._callSubscriber(this._state)
     }
 }
 
-export const addPostAC = (): ActionAddPostType => {
-    return {
-        type: 'ADD-POST'
-    } as const
-}
-export const updatePostAC = (newText: string): ActionUpdatePostType => {
-    return {
-        type: 'UPDATE-NEW-POST-TEXT',
-        newText
-    } as const
-}
-export const addMessageAC = (): ActionAddMessageType => {
-    return {
-        type: 'ADD-MESSAGE',
-        newMessage: {
-            id: ++store.getState().dialogsPage.messages.length,
-            message: store.getState().dialogsPage.newMessageText
-        }
-    } as const
-}
-export const updateMessageAC = (newMessageText: string): ActionUpdateMessageType => {
-    return {
-        type: 'UPDATE-MESSAGE-TEXT',
-        newMessageText
-    } as const
-}
 
 // window.state = state
