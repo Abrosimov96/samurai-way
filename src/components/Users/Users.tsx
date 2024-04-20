@@ -4,14 +4,18 @@ import axios from 'axios';
 import userPhoto from '../../assets/images/avatar.jpg'
 
 export const Users = ({users, setUsers, followUnfollow}: UsersPropsType) => {
-    if (!users.length) {
-        axios
-            .get('https://social-network.samuraijs.com/api/1.0/users')
-            .then(response => setUsers(response.data.items)
-            )
+
+    const getUser = () => {
+        if (!users.length) {
+            axios
+                .get('https://social-network.samuraijs.com/api/1.0/users')
+                .then(response => setUsers(response.data.items)
+                )
+        }
     }
     return (
         <div>
+            <button onClick={getUser}>Get Users</button>
             {
                 users.map(user => <div key={user.id}>
                     <span>
