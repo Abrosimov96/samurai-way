@@ -2,15 +2,15 @@
 export type UsersActionType = FollowUnfollowACType | setUsersACType
 
 export type UserType = {
+    name: string
     id: number
-    photoUrl: string
-    fullName: string
+    uniqueUrlName: string,
+    photos: {
+        small: string,
+        large: string
+    },
     followed: boolean
     status: string
-    location: {
-        city: string
-        country: string
-    }
 }
 
 export type UsersStateType = {
