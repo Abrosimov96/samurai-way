@@ -1,6 +1,7 @@
 import React from 'react'
 import {addMessageAC, updateMessageAC} from '../../redux/dialogs-reducer';
 import {Dialogs} from './Dialogs';
+import {StoreContext} from '../../storeContext';
 
 export type DialogType = {
     id: number
@@ -12,24 +13,25 @@ export type MessageType = {
     message: string
 }
 
-type DialogsPropsType = {
-    store: any
-}
+export const DialogsContainer = () => {
+    return <StoreContext.Consumer>
+        {
+            (store: any) => {
+                const state = store.getState().dialogsPage
+                const sendMessage = () => {
+                    const action = addMessageAC()
+                    store.dispatch(action)
+                }
 
-export const DialogsContainer = ({store}: DialogsPropsType) => {
-    const state = store.getState().dialogsPage
-    const sendMessage = () => {
-        const action = addMessageAC()
-        store.dispatch(action)
-    }
+                function onNewMessageChange(text: string) {
+                    const action = updateMessageAC(text)
+                    store.dispatch(action)
+                }
 
-    function onNewMessageChange(text: string) {
-        const action = updateMessageAC(text)
-        store.dispatch(action)
-    }
-
-    return <Dialogs
-        state={state}
-        onChangeMessageText={onNewMessageChange}
-        onSendMessage={sendMessage}  />
+                return <Dialogs
+                    state={state}
+                    onChangeMessageText={onNewMessageChange}
+                    onSendMessage={sendMessage}/>
+            }
+        }</StoreContext.Consumer>
 }

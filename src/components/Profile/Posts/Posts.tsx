@@ -19,7 +19,6 @@ export const Posts = ({posts,newPostText, updateNewPostText, addNewPost}: PostsP
         addNewPost()
     }
     const onPostChange = () => {
-        debugger
         if (newPostElement.current?.value) {
             updateNewPostText(newPostElement.current.value)
         }

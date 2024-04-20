@@ -4,14 +4,18 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import {App} from './App'
 import {BrowserRouter} from 'react-router-dom'
+import {Provider} from './storeContext';
 
 export const rerenderEntireTree = () => ReactDOM.render(<BrowserRouter>
-    <App store={store}/>
+    <Provider store={store}>
+        <App/>
+    </Provider>
 </BrowserRouter>, document.getElementById('customRoot'))
 
 rerenderEntireTree()
 
 store.subscribe(rerenderEntireTree)
+
 
 // let page = {
 //     _content: '',

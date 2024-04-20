@@ -9,17 +9,13 @@ import {Music} from './components/Music/Music'
 import {Settings} from './components/Settings/Settings'
 import {DialogsContainer} from './components/Dialogs/DialogsContainer';
 
-type AppPropsType = {
-    store: any
-}
-
-export const App = ({store}: AppPropsType) => {
+export const App = () => {
     return <div className="app-wrapper">
         <Header/>
-        <NavBar state={store.getState().sidebar}/>
+        <NavBar/>
         <div className="app-wrapper-content">
-            <Route path="/profile" render={() => <Profile store={store}/>}/>
-            <Route path="/dialogs" render={() => <DialogsContainer store={store}/>}/>
+            <Route path="/profile" render={() => <Profile/>}/>
+            <Route path="/dialogs" render={() => <DialogsContainer/>}/>
             <Route path="/new" component={New}/>
             <Route path="/music" component={Music}/>
             <Route path="/settings" component={Settings}/>
