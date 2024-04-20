@@ -17,8 +17,6 @@ export type SidebarType = {
     friends: FriendType[]
 }
 
-
-
 export type StateType = {
     profilePage: ProfilePageType
     dialogsPage: DialogsPage

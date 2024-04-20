@@ -8,7 +8,7 @@ import {Profile} from './components/Profile/Profile'
 import {New} from './components/New/New'
 import {Music} from './components/Music/Music'
 import {Settings} from './components/Settings/Settings'
-import {ActionType, StateType} from './redux/state'
+import {ActionType, StateType} from './redux/store'
 
 type AppPropsType = {
     state: StateType

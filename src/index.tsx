@@ -1,11 +1,11 @@
-import {StateType, store} from './redux/state'
+import {RootReducerType, store} from './redux/redux-store'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import {App} from './App'
 import {BrowserRouter} from 'react-router-dom'
 
-export const rerenderEntireTree = (state: StateType) => ReactDOM.render(<BrowserRouter>
+export const rerenderEntireTree = (state: RootReducerType) => ReactDOM.render(<BrowserRouter>
     <App
         state={state}
         dispatch={store.dispatch.bind(store)}
@@ -14,7 +14,7 @@ export const rerenderEntireTree = (state: StateType) => ReactDOM.render(<Browser
 
 rerenderEntireTree(store.getState())
 
-store.subscribe(rerenderEntireTree)
+store.subscribe(() => rerenderEntireTree(store.getState()))
 
 // let page = {
 //     _content: '',
