@@ -1,23 +1,23 @@
-import {UsersPropsType} from './UsersContainer';
-import s from './Users.module.css'
+import {Component} from 'react';
+import s from './Users.module.css';
+import userPhoto from '../../assets/images/avatar.jpg';
 import axios from 'axios';
-import userPhoto from '../../assets/images/avatar.jpg'
+import {UserType} from '../../redux/users-reducer';
 
-export const Users = ({users, setUsers, followUnfollow}: UsersPropsType) => {
 
-    const getUser = () => {
-        if (!users.length) {
-            axios
-                .get('https://social-network.samuraijs.com/api/1.0/users')
-                .then(response => setUsers(response.data.items)
-                )
-        }
+export class User extends Component<any, any> {
+
+
+    componentDidMount() {
+        axios
+            .get('https://social-network.samuraijs.com/api/1.0/users')
+            .then(response => this.props.setUsers(response.data.items))
     }
-    return (
-        <div>
-            <button onClick={getUser}>Get Users</button>
+
+    render() {
+        return <div>
             {
-                users.map(user => <div key={user.id}>
+                this.props.users.map((user: UserType) => <div key={user.id}>
                     <span>
                         <div>
                             <img className={s.userPhoto}
@@ -29,7 +29,7 @@ export const Users = ({users, setUsers, followUnfollow}: UsersPropsType) => {
                         </div>
                         <div>
                             <button
-                                onClick={() => followUnfollow(user.id)}>
+                                onClick={() => this.props.followUnfollow(user.id)}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>
                         </div>
@@ -47,5 +47,5 @@ export const Users = ({users, setUsers, followUnfollow}: UsersPropsType) => {
                 </div>)
             }
         </div>
-    );
-};
+    }
+}
