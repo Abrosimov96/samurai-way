@@ -6,6 +6,7 @@ export type StateType = {
     dialogsPage: {
         messages: MessageType[]
         dialogs: DialogType[]
+        newMessageText: string
     }
     sidebar: {
         friends: FriendType[]
@@ -44,8 +45,12 @@ export type ActionAddMessageType = {
         message: string
     }
 }
+export type ActionUpdateMessageType = {
+    type: 'UPDATE-MESSAGE-TEXT'
+    newMessageText: string
+}
 
-export type ActionType = ActionAddPostType | ActionUpdatePostType | ActionAddMessageType
+export type ActionType = ActionAddPostType | ActionUpdatePostType | ActionAddMessageType | ActionUpdateMessageType
 
 export const store: StoreType = {
     _state: {
@@ -113,6 +118,7 @@ export const store: StoreType = {
                     id: 6, message: 'Yo',
                 },
             ],
+            newMessageText: ''
         },
         sidebar: {
             friends: [
@@ -152,8 +158,14 @@ export const store: StoreType = {
                 this._callSubscriber(this._state)
                 break
             }
+            case 'UPDATE-MESSAGE-TEXT': {
+                this._state.dialogsPage.newMessageText = action.newMessageText
+                this._callSubscriber(this._state)
+                break
+            }
             case 'ADD-MESSAGE': {
                 this._state.dialogsPage.messages.push(action.newMessage)
+                this._state.dialogsPage.newMessageText = ''
                 this._callSubscriber(this._state)
                 break
             }
@@ -172,6 +184,21 @@ export const updatePostAC = (newText: string): ActionUpdatePostType => {
     return {
         type: 'UPDATE-NEW-POST-TEXT',
         newText
+    } as const
+}
+export const addMessageAC = (): ActionAddMessageType => {
+    return {
+        type: 'ADD-MESSAGE',
+        newMessage: {
+            id: ++store.getState().dialogsPage.messages.length,
+            message: store.getState().dialogsPage.newMessageText
+        }
+    } as const
+}
+export const updateMessageAC = (newMessageText: string): ActionUpdateMessageType => {
+    return {
+        type: 'UPDATE-MESSAGE-TEXT',
+        newMessageText
     } as const
 }
 
