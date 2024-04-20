@@ -1,5 +1,4 @@
 import {DialogsPage} from './store';
-import {store} from './store';
 
 export type DialogsActionType = AddMessageACType | UpdateMessageACType
 
@@ -77,7 +76,6 @@ export const addMessageAC = () => {
         type: 'ADD-MESSAGE',
         newMessage: {
             id: new Date().getTime(),
-            message: store.getState().dialogsPage.newMessageText
         }
     } as const
 }

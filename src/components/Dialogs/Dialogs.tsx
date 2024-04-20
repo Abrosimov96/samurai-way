@@ -2,8 +2,6 @@ import React, {ChangeEvent} from 'react'
 import classes from './Dialogs.module.css'
 import {DialogItem} from './DialogItem/DialogItem'
 import {Message} from './Message/Message'
-import {ActionType} from '../../redux/store';
-import {addMessageAC, updateMessageAC} from '../../redux/dialogs-reducer';
 
 export type DialogType = {
     id: number
@@ -21,23 +19,22 @@ type DialogsPropsType = {
         messages: MessageType[]
         newMessageText: string
     }
-    dispatch: (action: ActionType) => void
+    onSendMessage: () => void
+    onChangeMessageText: (value: string) => void
 }
 
-export const Dialogs = ({state, dispatch}: DialogsPropsType) => {
+export const Dialogs = ({state, onSendMessage, onChangeMessageText}: DialogsPropsType) => {
     const dialogsElements = state.dialogs.map(dialog => <DialogItem id={dialog.id} name={dialog.name}/>)
 
     const messagesElements = state.messages.map(message => <Message message={message.message}/>)
 
 
     const sendMessage = () => {
-        const action = addMessageAC()
-        dispatch(action)
+        onSendMessage()
     }
 
     function onNewMessageChange(e: ChangeEvent<HTMLTextAreaElement>) {
-        const action = updateMessageAC(e.currentTarget.value)
-        dispatch(action)
+        onChangeMessageText(e.currentTarget.value)
     }
 
     return <>
