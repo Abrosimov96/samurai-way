@@ -28,8 +28,9 @@ export class User extends Component<UsersPropsType, any> {
     render() {
         const pagesCount = Math.round(this.props.totalUsersCount / this.props.pageSize)
         const pages = []
-        for (let i = 1; i <= pagesCount; i++) {
-            if (i > 20) break
+        const min = this.props.currentPage - 10 < 1 ? 1 : this.props.currentPage - 10
+        const max = this.props.currentPage + 10 > pagesCount ? pagesCount : this.props.currentPage + 10
+        for (let i = min; i <= max; i++) {
             pages.push(i)
         }
         return <div>
