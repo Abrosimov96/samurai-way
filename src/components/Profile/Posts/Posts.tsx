@@ -1,15 +1,10 @@
 import React from 'react'
 import classes from './Posts.module.css'
 import {Post, PostPropsType} from './Post/Post'
+import {PostsPropsType} from './PostsContainer';
 
 export type PostsType = PostPropsType[]
 
-export type PostsPropsType = {
-    posts: PostsType
-    newPostText: string
-    addNewPost: () => void
-    updateNewPostText: (value: string) => void
-}
 
 export const Posts = ({posts,newPostText, updateNewPostText, addNewPost}: PostsPropsType) => {
     const postsElements = posts.map(post => <Post id={post.id} message={post.message} likesCount={post.likesCount}/>)

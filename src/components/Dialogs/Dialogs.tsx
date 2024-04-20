@@ -2,6 +2,7 @@ import React, {ChangeEvent} from 'react'
 import classes from './Dialogs.module.css'
 import {DialogItem} from './DialogItem/DialogItem'
 import {Message} from './Message/Message'
+import {DialogsPropsType} from './DialogsContainer';
 
 export type DialogType = {
     id: number
@@ -13,20 +14,11 @@ export type MessageType = {
     message: string
 }
 
-type DialogsPropsType = {
-    state: {
-        dialogs: DialogType[]
-        messages: MessageType[]
-        newMessageText: string
-    }
-    onSendMessage: () => void
-    onChangeMessageText: (value: string) => void
-}
 
-export const Dialogs = ({state, onSendMessage, onChangeMessageText}: DialogsPropsType) => {
-    const dialogsElements = state.dialogs.map(dialog => <DialogItem id={dialog.id} name={dialog.name}/>)
+export const Dialogs = ({dialogsPage, onSendMessage, onChangeMessageText}: DialogsPropsType) => {
+    const dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem id={dialog.id} name={dialog.name}/>)
 
-    const messagesElements = state.messages.map(message => <Message message={message.message}/>)
+    const messagesElements = dialogsPage.messages.map(message => <Message message={message.message}/>)
 
 
     const sendMessage = () => {
@@ -43,7 +35,7 @@ export const Dialogs = ({state, onSendMessage, onChangeMessageText}: DialogsProp
             <div className={classes.messages}>
                 {messagesElements}
                 <textarea
-                    value={state.newMessageText}
+                    value={dialogsPage.newMessageText}
                     onChange={e => onNewMessageChange(e)}
                 />
                 <button onClick={sendMessage}>Send message</button>
