@@ -1,50 +1,36 @@
-import {Component} from 'react';
 import s from './Users.module.css';
-import userPhoto from '../../assets/images/avatar.jpg';
-import axios from 'axios';
 import {UserType} from '../../redux/users-reducer';
-import {UsersPropsType} from './UsersContainer';
+import userPhoto from '../../assets/images/avatar.jpg';
 
-
-export class User extends Component<UsersPropsType, any> {
-    componentDidMount() {
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
-            .then(response => {
-                this.props.setUsers(response.data.items)
-                this.props.setTotalUsersCount(response.data.totalCount)
-            })
+type UsersProps = {
+    users: UserType[]
+    totalUsersCount: number
+    pageSize: number
+    currentPage: number
+    onPageChanged: (page: number) => void
+    followUnfollow: (userId: number) => void
+};
+export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageChanged, currentPage}: UsersProps) => {
+    const pagesCount = Math.round(totalUsersCount / pageSize)
+    const pages = []
+    const min = currentPage - 10 < 1 ? 1 : currentPage - 10
+    const max = currentPage + 10 > pagesCount ? pagesCount : currentPage + 10
+    for (let i = min; i <= max; i++) {
+        pages.push(i)
     }
-
-    onPageChanged = (page: number) => {
-        this.props.setCurrentPage(page)
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.pageSize}`)
-            .then(response => {
-                this.props.setUsers(response.data.items)
-            })
-    }
-
-    render() {
-        const pagesCount = Math.round(this.props.totalUsersCount / this.props.pageSize)
-        const pages = []
-        const min = this.props.currentPage - 10 < 1 ? 1 : this.props.currentPage - 10
-        const max = this.props.currentPage + 10 > pagesCount ? pagesCount : this.props.currentPage + 10
-        for (let i = min; i <= max; i++) {
-            pages.push(i)
-        }
-        return <div>
+    return (
+        <div>
             <div className={s.pagination}>
                 {
                     pages.map(page => <div
-                        onClick={()=> this.onPageChanged(page)}
-                        className={this.props.currentPage === page ? s.selectedPage : ''}>
+                        onClick={() => onPageChanged(page)}
+                        className={currentPage === page ? s.selectedPage : ''}>
                         {page}
                     </div>)
                 }
             </div>
             {
-                this.props.users.map((user: UserType) => <div key={user.id}>
+                users.map((user: UserType) => <div key={user.id}>
                     <span>
                         <div>
                             <img className={s.userPhoto}
@@ -56,7 +42,7 @@ export class User extends Component<UsersPropsType, any> {
                         </div>
                         <div>
                             <button
-                                onClick={() => this.props.followUnfollow(user.id)}>
+                                onClick={() => followUnfollow(user.id)}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>
                         </div>
@@ -74,5 +60,5 @@ export class User extends Component<UsersPropsType, any> {
                 </div>)
             }
         </div>
-    }
-}
+    );
+};
