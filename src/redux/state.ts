@@ -157,9 +157,22 @@ export const store: StoreType = {
                 this._callSubscriber(this._state)
                 break
             }
-
+            default:
+                return this._state
         }
     }
+}
+
+export const addPostAC = (): ActionAddPostType => {
+    return {
+        type: 'ADD-POST'
+    } as const
+}
+export const updatePostAC = (newText: string): ActionUpdatePostType => {
+    return {
+        type: 'UPDATE-NEW-POST-TEXT',
+        newText
+    } as const
 }
 
 // window.state = state

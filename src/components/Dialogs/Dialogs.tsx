@@ -44,9 +44,12 @@ export const Dialogs = ({state, dispatch}: DialogsPropsType) => {
     return <>
         <div className={classes.dialogs}>
             <div className={classes.dialogsItems}>{dialogsElements}</div>
-            <div className={classes.messages}>{messagesElements}</div>
+            <div className={classes.messages}>
+                {messagesElements}
+                <textarea ref={messageRef}/>
+                <button onClick={sendMessage}>Send message</button>
+            </div>
         </div>
-        <textarea ref={messageRef}/>
-        <button onClick={sendMessage}>Send message</button>
+
     </>
 }

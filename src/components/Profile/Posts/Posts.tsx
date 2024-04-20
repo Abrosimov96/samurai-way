@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from './Posts.module.css'
 import {Post, PostPropsType} from './Post/Post'
-import {ActionAddPostType, ActionType, ActionUpdatePostType} from '../../../redux/state';
+import {ActionType, addPostAC, updatePostAC} from '../../../redux/state';
 
 export type PostsType = PostPropsType[]
 
@@ -15,13 +15,13 @@ export const Posts = ({posts, dispatch, newPostText}: PostsPropsType) => {
     const postsElements = posts.map(post => <Post id={post.id} message={post.message} likesCount={post.likesCount}/>)
 
     const addPosts = () => {
-        const action: ActionAddPostType = {type: 'ADD-POST'};
+        const action = addPostAC();
         dispatch(action)
     }
 
     const onPostChange = () => {
         if (newPostElement.current?.value) {
-            const action: ActionUpdatePostType = {type: 'UPDATE-NEW-POST-TEXT', newText: newPostElement.current.value};
+            const action = updatePostAC(newPostElement.current.value);
             dispatch(action)
         }
     }
