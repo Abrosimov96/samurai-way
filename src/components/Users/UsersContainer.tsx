@@ -1,12 +1,11 @@
 import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
 import {RootReducerType} from '../../redux/redux-store';
 import {
-    followUnfollowAC,
-    isFetchingAC,
-    setCurrentPageAC,
-    setUsersAC,
-    setUsersCountAC,
+    followUnfollow,
+    setCurrentPage,
+    setIsFetching,
+    setTotalUsersCount,
+    setUsers,
     UsersStateType,
     UserType
 } from '../../redux/users-reducer';
@@ -75,24 +74,30 @@ function mapStateToProps(state: RootReducerType): UsersStateType {
     }
 }
 
-function mapDispatchToProps(dispatch: Dispatch): MapDispatchToPropsType {
-    return {
-        followUnfollow: (userId: number) => {
-            dispatch(followUnfollowAC(userId))
-        },
-        setUsers: (users: UserType[]) => {
-            dispatch(setUsersAC(users))
-        },
-        setCurrentPage: (currentPage: number) => {
-            dispatch(setCurrentPageAC(currentPage))
-        },
-        setTotalUsersCount: (usersCount: number) => {
-            dispatch(setUsersCountAC(usersCount))
-        },
-        setIsFetching: (isFetching: boolean) => {
-            dispatch(isFetchingAC(isFetching))
-        }
-    }
-}
+// function mapDispatchToProps(dispatch: Dispatch): MapDispatchToPropsType {
+//     return {
+//         followUnfollow: (userId: number) => {
+//             dispatch(followUnfollowAC(userId))
+//         },
+//         setUsers: (users: UserType[]) => {
+//             dispatch(setUsersAC(users))
+//         },
+//         setCurrentPage: (currentPage: number) => {
+//             dispatch(setCurrentPageAC(currentPage))
+//         },
+//         setTotalUsersCount: (usersCount: number) => {
+//             dispatch(setUsersCountAC(usersCount))
+//         },
+//         setIsFetching: (isFetching: boolean) => {
+//             dispatch(isFetchingAC(isFetching))
+//         }
+//     }
+// }
 
-export const UsersContainer = connect(mapStateToProps, mapDispatchToProps)(UserContainer)
+export const UsersContainer = connect(mapStateToProps, {
+    followUnfollow,
+    setUsers,
+    setCurrentPage,
+    setTotalUsersCount,
+    setIsFetching
+})(UserContainer)
