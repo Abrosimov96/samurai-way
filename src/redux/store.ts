@@ -4,9 +4,36 @@ import {ProfileActionType, profileReducer} from './profile-reducer';
 import {DialogsActionType, dialogsReducer} from './dialogs-reducer';
 import {sidebarReducer} from './sidebar-reducer';
 
+type UserContacts = {
+    github: string
+    vk: string
+    facebook: string
+    instagram: string
+    twitter: string
+    website: string
+    youtube: string
+    mainLink: string
+}
+
+type UserPhotoType = {
+    small: string
+    large: string
+}
+
+export type UserProfile = {
+    userId: number
+    aboutMe: string
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    contacts: UserContacts
+    photos: UserPhotoType
+}
+
 export type ProfilePageType = {
     posts: PostPropsType[]
     newPostText: string
+    userProfile: UserProfile
 }
 export type DialogsPage = {
     messages: MessageType[]

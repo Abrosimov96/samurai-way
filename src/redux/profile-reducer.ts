@@ -1,7 +1,7 @@
-import {ProfilePageType} from './store';
+import {ProfilePageType, UserProfile} from './store';
 import {PostPropsType} from '../components/Profile/Posts/Post/Post';
 
-export type ProfileActionType = AddPostACType | UpdatePostACType
+export type ProfileActionType = AddPostACType | UpdatePostACType | SetUserProfileACType
 
 
 
@@ -21,6 +21,29 @@ const initialState: ProfilePageType =  {
             },
         ],
         newPostText: 'it-kamasutra.com',
+        userProfile: {
+            userId: 1,
+            aboutMe: '',
+            lookingForAJob: true,
+            lookingForAJobDescription: '',
+            fullName: 'Anton',
+            contacts: {
+                github: '',
+                vk: '',
+                facebook: '',
+                instagram: '',
+                twitter: '',
+                website: '',
+                youtube: '',
+                mainLink: ''
+            },
+            photos:{
+                small: '',
+                large: ''
+            }
+
+
+        }
     }
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ProfileActionType): ProfilePageType => {
@@ -40,6 +63,12 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Pr
         case 'UPDATE-NEW-POST-TEXT': {
             return {...state, newPostText: action.newText}
         }
+        case 'SET-USER-PROFILE': {
+            return {
+                ...state,
+                userProfile: action.userProfile
+            }
+        }
         default:
             return state
     }
@@ -57,5 +86,13 @@ export const updatePostAC = (newText: string) => {
     return {
         type: 'UPDATE-NEW-POST-TEXT',
         newText
+    } as const
+}
+
+type SetUserProfileACType = ReturnType<typeof setUserProfileAC>
+export const setUserProfileAC = (userProfile: UserProfile) => {
+    return {
+        type: 'SET-USER-PROFILE',
+        userProfile
     } as const
 }
