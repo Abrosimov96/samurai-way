@@ -21,12 +21,15 @@ export const ProfileInfo = ({userProfile}: ProfileInfoPropsType) => {
     return (
         <div>
         <div>
-            <img src={photos.large} alt='large' />
+            <img src={photos.large} alt={userId.toString()} />
         </div>
         <div className={s.descriptionBlock}>
             <img src={photos.small} alt='ava'/>
+            <p>{fullName}</p>
             <p>{aboutMe}</p>
             <input type={'checkbox'} checked={lookingForAJob}/>
+            <p>{lookingForAJobDescription}</p>
+            {JSON.stringify(contacts)}
         </div>
     </div>)
 

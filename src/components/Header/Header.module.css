@@ -1,8 +1,24 @@
 .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     grid-area: h;
     background-color: lightcoral;
+    padding: 0 50px;
 }
 
 .header img {
-    width: 100px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.loginBlock > a {
+    text-decoration: none;
+    color: aliceblue;
+    cursor: pointer;
+}
+
+.loginBlock > a:hover{
+    color: burlywood;
 }
