@@ -4,12 +4,6 @@ export type AuthDataType = {
     login: string
     isAuth: boolean
 }
-export type ResponseType<D = {}> = {
-    data: D
-    resultCode: number
-    messages: string[]
-}
-
 
 const initialState: AuthDataType = {
     id: 1,

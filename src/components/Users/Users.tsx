@@ -2,7 +2,7 @@ import s from './Users.module.css';
 import {UserType} from '../../redux/users-reducer';
 import userPhoto from '../../assets/images/avatar.jpg';
 import {NavLink} from 'react-router-dom';
-import axios from 'axios';
+import {userAPI} from '../../api/api';
 
 type UsersProps = {
     users: UserType[]
@@ -46,29 +46,18 @@ export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageC
                         </div>
                         <div>
                             <button
-                                onClick={() => {
+                                onClick={async () => {
                                     if (!user.followed) {
-                                        axios
-                                            .post(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`, {}, {
-                                                withCredentials: true
-                                            })
-                                            .then(response => {
-                                                if (response.data.resultCode === 0) {
-                                                    followUnfollow(user.id)
-                                                }
-                                            })
+                                        const {resultCode} = await userAPI.followUser(user.id)
+                                        if (resultCode === 0) {
+                                            followUnfollow(user.id)
+                                        }
                                     } else {
-                                        axios
-                                            .delete(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`, {
-                                                withCredentials: true
-                                            })
-                                            .then(response => {
-                                                if (response.data.resultCode === 0) {
-                                                    followUnfollow(user.id)
-                                                }
-                                            })
+                                        const {resultCode} = await userAPI.unfollowUser(user.id)
+                                        if (resultCode === 0) {
+                                            followUnfollow(user.id)
+                                        }
                                     }
-
                                 }}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>

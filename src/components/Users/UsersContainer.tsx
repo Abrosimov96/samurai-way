@@ -10,42 +10,32 @@ import {
     UserType
 } from '../../redux/users-reducer';
 import {Component} from 'react';
-import axios from 'axios';
 import {Users} from './Users'
 import {Loader} from '../common/Loader/Loader';
+import {userAPI} from '../../api/api';
 
 class UserContainer extends Component<UsersPropsType, any> {
-    componentDidMount() {
+    async componentDidMount() {
         this.props.setIsFetching(true)
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`, {
-                withCredentials: true
-            })
-            .then(response => {
-                this.props.setIsFetching(false)
-                this.props.setUsers(response.data.items)
-                this.props.setTotalUsersCount(response.data.totalCount)
-            })
+        const {items, totalCount} = await userAPI.getUsers(this.props.currentPage, this.props.pageSize)
+        this.props.setIsFetching(false)
+        this.props.setUsers(items)
+        this.props.setTotalUsersCount(totalCount)
     }
 
-    onPageChanged = (page: number) => {
+    onPageChanged = async (page: number) => {
         this.props.setCurrentPage(page)
         this.props.setIsFetching(true)
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.pageSize}`, {
-                withCredentials: true
-            })
-            .then(response => {
-                this.props.setIsFetching(false)
-                this.props.setUsers(response.data.items)
-            })
+        const {items} = await userAPI.getUsers(page, this.props.pageSize)
+        this.props.setIsFetching(false)
+        this.props.setUsers(items)
     }
 
     render() {
         return <>
             {
                 this.props.isFetching
-                    ? <Loader />
+                    ? <Loader/>
                     : <Users
                         totalUsersCount={this.props.totalUsersCount}
                         users={this.props.users}

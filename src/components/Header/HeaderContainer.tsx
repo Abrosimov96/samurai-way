@@ -2,20 +2,19 @@ import React from 'react'
 import {Header} from './Header';
 import {RootReducerType} from '../../redux/redux-store';
 import {connect} from 'react-redux';
-import axios from 'axios';
 import {AuthDataType, authMeAC} from '../../redux/auth-reducer';
+import {authMeAPI} from '../../api/api';
 
 export type HeaderContainerPropsType = MapStateToPropsType & MapDispatchToPropsType
-class HeaderContainer extends React.Component<HeaderContainerPropsType, any>{
-    componentDidMount() {
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/auth/me`, {withCredentials: true})
-            .then(response => {
-                if (response.data.resultCode === 0) {
-                    this.props.authMeAC(response.data.data)
-                }
-            })
+
+class HeaderContainer extends React.Component<HeaderContainerPropsType, any> {
+    async componentDidMount() {
+        const {resultCode, data} = await authMeAPI.authMeResponse()
+        if (resultCode === 0) {
+            this.props.authMeAC({...data, isAuth: true})
+        }
     }
+
     render() {
         return <Header {...this.props} />
     }
@@ -29,7 +28,7 @@ type MapStateToPropsType = {
     login: string
 }
 
-const mapStateToProps = (state: RootReducerType):MapStateToPropsType => ({
+const mapStateToProps = (state: RootReducerType): MapStateToPropsType => ({
     isAuth: state.authMe.isAuth,
     login: state.authMe.login
 })
