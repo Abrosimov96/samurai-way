@@ -2,6 +2,7 @@ import s from './Users.module.css';
 import {UserType} from '../../redux/users-reducer';
 import userPhoto from '../../assets/images/avatar.jpg';
 import {NavLink} from 'react-router-dom';
+import axios from 'axios';
 
 type UsersProps = {
     users: UserType[]
@@ -45,7 +46,30 @@ export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageC
                         </div>
                         <div>
                             <button
-                                onClick={() => followUnfollow(user.id)}>
+                                onClick={() => {
+                                    if (!user.followed) {
+                                        axios
+                                            .post(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`, {}, {
+                                                withCredentials: true
+                                            })
+                                            .then(response => {
+                                                if (response.data.resultCode === 0) {
+                                                    followUnfollow(user.id)
+                                                }
+                                            })
+                                    } else {
+                                        axios
+                                            .delete(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`, {
+                                                withCredentials: true
+                                            })
+                                            .then(response => {
+                                                if (response.data.resultCode === 0) {
+                                                    followUnfollow(user.id)
+                                                }
+                                            })
+                                    }
+
+                                }}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>
                         </div>

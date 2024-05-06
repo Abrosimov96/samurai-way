@@ -18,7 +18,9 @@ class UserContainer extends Component<UsersPropsType, any> {
     componentDidMount() {
         this.props.setIsFetching(true)
         axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
+            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`, {
+                withCredentials: true
+            })
             .then(response => {
                 this.props.setIsFetching(false)
                 this.props.setUsers(response.data.items)
@@ -30,7 +32,9 @@ class UserContainer extends Component<UsersPropsType, any> {
         this.props.setCurrentPage(page)
         this.props.setIsFetching(true)
         axios
-            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.pageSize}`)
+            .get(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.pageSize}`, {
+                withCredentials: true
+            })
             .then(response => {
                 this.props.setIsFetching(false)
                 this.props.setUsers(response.data.items)
@@ -74,25 +78,6 @@ function mapStateToProps(state: RootReducerType): UsersStateType {
     }
 }
 
-// function mapDispatchToProps(dispatch: Dispatch): MapDispatchToPropsType {
-//     return {
-//         followUnfollow: (userId: number) => {
-//             dispatch(followUnfollowAC(userId))
-//         },
-//         setUsers: (users: UserType[]) => {
-//             dispatch(setUsersAC(users))
-//         },
-//         setCurrentPage: (currentPage: number) => {
-//             dispatch(setCurrentPageAC(currentPage))
-//         },
-//         setTotalUsersCount: (usersCount: number) => {
-//             dispatch(setUsersCountAC(usersCount))
-//         },
-//         setIsFetching: (isFetching: boolean) => {
-//             dispatch(isFetchingAC(isFetching))
-//         }
-//     }
-// }
 
 export const UsersContainer = connect(mapStateToProps, {
     followUnfollow,
