@@ -4,6 +4,7 @@ export type UsersActionType =
     | setCurrentPageACType
     | setUsersCountACType
     | isFetchingACType
+    | FollowingInProgressACType
 
 export type UserType = {
     name: string
@@ -23,6 +24,7 @@ export type UsersStateType = {
     totalUsersCount: number
     currentPage: number
     isFetching: boolean
+    followingInProgress: number[]
 }
 
 
@@ -31,7 +33,8 @@ const initialState: UsersStateType = {
     pageSize: 5,
     totalUsersCount: 0,
     currentPage: 1,
-    isFetching: true
+    isFetching: true,
+    followingInProgress: []
 }
 
 export const usersReducer = (state: UsersStateType = initialState, action: UsersActionType): UsersStateType => {
@@ -61,6 +64,13 @@ export const usersReducer = (state: UsersStateType = initialState, action: Users
             return {
                 ...state,
                 isFetching: action.isFetching
+            }
+        case 'FOLLOWING-IN-PROGRESS':
+            return {
+                ...state,
+                followingInProgress: action.isFollowing
+                    ? [...state.followingInProgress, action.id]
+                    : state.followingInProgress.filter(id => id !== action.id)
             }
         default:
             return state
@@ -101,6 +111,14 @@ export const setIsFetching = (isFetching: boolean) => {
     return {
         type: 'IS-FETCHING',
         isFetching
+    } as const
+}
+type FollowingInProgressACType = ReturnType<typeof followingInProgressAC>
+export const followingInProgressAC = (isFollowing: boolean, id: number) => {
+    return {
+        type: 'FOLLOWING-IN-PROGRESS',
+        isFollowing,
+        id
     } as const
 }
 

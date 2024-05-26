@@ -11,8 +11,10 @@ type UsersProps = {
     currentPage: number
     onPageChanged: (page: number) => void
     followUnfollow: (userId: number) => void
+    setProgressInFollowing: (isFollowing: boolean, id: number) => void
+    followingInProgress: number[]
 };
-export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageChanged, currentPage}: UsersProps) => {
+export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageChanged, currentPage, setProgressInFollowing,followingInProgress}: UsersProps) => {
     const pagesCount = Math.round(totalUsersCount / pageSize)
     const pages = []
     const min = currentPage - 10 < 1 ? 1 : currentPage - 10
@@ -46,7 +48,9 @@ export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageC
                         </div>
                         <div>
                             <button
+                                disabled={followingInProgress.some((id: number) => id === user.id)}
                                 onClick={async () => {
+                                    setProgressInFollowing(true, user.id)
                                     if (!user.followed) {
                                         const {resultCode} = await userAPI.followUser(user.id)
                                         if (resultCode === 0) {
@@ -58,6 +62,7 @@ export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageC
                                             followUnfollow(user.id)
                                         }
                                     }
+                                    setProgressInFollowing(false, user.id)
                                 }}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>

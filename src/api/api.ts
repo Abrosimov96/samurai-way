@@ -22,7 +22,11 @@ export type ResponseType<D = {}> = {
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0',
-    withCredentials: true
+    withCredentials: true,
+    headers: {
+        "API-KEY": "2800ad43-9529-4c23-8608-2e6f8b2f9c1a"
+    }
+
 })
 
 export const userAPI = {
