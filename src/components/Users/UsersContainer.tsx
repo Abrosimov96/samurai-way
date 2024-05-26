@@ -3,33 +3,23 @@ import {RootReducerType} from '../../redux/redux-store';
 import {
     followingInProgressAC,
     followUnfollow,
+    followUser,
+    getUsers,
     setCurrentPage,
-    setIsFetching,
-    setTotalUsersCount,
-    setUsers,
-    UsersStateType,
-    UserType
+    unfollowUser,
+    UsersStateType
 } from '../../redux/users-reducer';
 import {Component} from 'react';
 import {Users} from './Users'
 import {Loader} from '../common/Loader/Loader';
-import {userAPI} from '../../api/api';
 
 class UserContainer extends Component<UsersPropsType, any> {
     async componentDidMount() {
-        this.props.setIsFetching(true)
-        const {items, totalCount} = await userAPI.getUsers(this.props.currentPage, this.props.pageSize)
-        this.props.setIsFetching(false)
-        this.props.setUsers(items)
-        this.props.setTotalUsersCount(totalCount)
+        this.props.getUsers(this.props.currentPage, this.props.pageSize)
     }
 
     onPageChanged = async (page: number) => {
-        this.props.setCurrentPage(page)
-        this.props.setIsFetching(true)
-        const {items} = await userAPI.getUsers(page, this.props.pageSize)
-        this.props.setIsFetching(false)
-        this.props.setUsers(items)
+        this.props.getUsers(page, this.props.pageSize)
     }
 
     render() {
@@ -43,9 +33,9 @@ class UserContainer extends Component<UsersPropsType, any> {
                         currentPage={this.props.currentPage}
                         pageSize={this.props.pageSize}
                         onPageChanged={this.onPageChanged}
-                        followUnfollow={this.props.followUnfollow}
-                        setProgressInFollowing={this.props.followingInProgressAC}
                         followingInProgress={this.props.followingInProgress}
+                        followUser={this.props.followUser}
+                        unfollowUser={this.props.unfollowUser}
                     />
 
             }
@@ -56,11 +46,11 @@ class UserContainer extends Component<UsersPropsType, any> {
 
 type MapDispatchToPropsType = {
     followUnfollow: (userId: number) => void
-    setUsers: (users: UserType[]) => void
     setCurrentPage: (currentPage: number) => void
-    setTotalUsersCount: (usersCount: number) => void
-    setIsFetching: (isFetching: boolean) => void
     followingInProgressAC: (isFollowing: boolean, id: number) => void
+    getUsers: (currentPage: number, pageSize: number) => void
+    followUser: (userId: number) => void
+    unfollowUser: (userId: number) => void
 }
 export type UsersPropsType = UsersStateType & MapDispatchToPropsType
 
@@ -75,12 +65,11 @@ function mapStateToProps(state: RootReducerType): UsersStateType {
     }
 }
 
-
 export const UsersContainer = connect(mapStateToProps, {
     followUnfollow,
-    setUsers,
     setCurrentPage,
-    setTotalUsersCount,
-    setIsFetching,
-    followingInProgressAC
+    followingInProgressAC,
+    getUsers,
+    followUser,
+    unfollowUser
 })(UserContainer)

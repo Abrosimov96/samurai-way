@@ -2,7 +2,6 @@ import s from './Users.module.css';
 import {UserType} from '../../redux/users-reducer';
 import userPhoto from '../../assets/images/avatar.jpg';
 import {NavLink} from 'react-router-dom';
-import {userAPI} from '../../api/api';
 
 type UsersProps = {
     users: UserType[]
@@ -10,11 +9,11 @@ type UsersProps = {
     pageSize: number
     currentPage: number
     onPageChanged: (page: number) => void
-    followUnfollow: (userId: number) => void
-    setProgressInFollowing: (isFollowing: boolean, id: number) => void
     followingInProgress: number[]
+    followUser: (userId: number) => void
+    unfollowUser: (userId: number) => void
 };
-export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageChanged, currentPage, setProgressInFollowing,followingInProgress}: UsersProps) => {
+export const Users = ({users, totalUsersCount, pageSize, onPageChanged, currentPage,followingInProgress,followUser,unfollowUser}: UsersProps) => {
     const pagesCount = Math.round(totalUsersCount / pageSize)
     const pages = []
     const min = currentPage - 10 < 1 ? 1 : currentPage - 10
@@ -49,20 +48,12 @@ export const Users = ({users, totalUsersCount, pageSize, followUnfollow, onPageC
                         <div>
                             <button
                                 disabled={followingInProgress.some((id: number) => id === user.id)}
-                                onClick={async () => {
-                                    setProgressInFollowing(true, user.id)
+                                onClick={ () => {
                                     if (!user.followed) {
-                                        const {resultCode} = await userAPI.followUser(user.id)
-                                        if (resultCode === 0) {
-                                            followUnfollow(user.id)
-                                        }
+                                        followUser(user.id)
                                     } else {
-                                        const {resultCode} = await userAPI.unfollowUser(user.id)
-                                        if (resultCode === 0) {
-                                            followUnfollow(user.id)
-                                        }
+                                        unfollowUser(user.id)
                                     }
-                                    setProgressInFollowing(false, user.id)
                                 }}>
                                 {user.followed ? 'Unfollow' : 'Follow'}
                             </button>

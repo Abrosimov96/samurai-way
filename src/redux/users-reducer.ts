@@ -1,3 +1,6 @@
+import {Dispatch} from 'redux';
+import {userAPI} from '../api/api';
+
 export type UsersActionType =
     FollowUnfollowACType
     | setUsersACType
@@ -120,6 +123,31 @@ export const followingInProgressAC = (isFollowing: boolean, id: number) => {
         isFollowing,
         id
     } as const
+}
+
+export const getUsers = (currentPage: number, pageSize: number) => async (dispatch: Dispatch) =>  {
+    dispatch(setCurrentPage(currentPage))
+    dispatch(setIsFetching(true))
+    const {items, totalCount} = await userAPI.getUsers(currentPage, pageSize)
+    dispatch(setIsFetching(false))
+    dispatch(setUsers(items))
+    dispatch(setTotalUsersCount(totalCount))
+}
+export const followUser = (userId: number) => async (dispatch: Dispatch) =>  {
+    dispatch(followingInProgressAC(true, userId))
+    const {resultCode} = await userAPI.followUser(userId)
+    if (resultCode === 0) {
+        dispatch(followUnfollow(userId))
+    }
+    dispatch(followingInProgressAC(false, userId))
+}
+export const unfollowUser = (userId: number) => async (dispatch: Dispatch) =>  {
+    dispatch(followingInProgressAC(true, userId))
+    const {resultCode} = await userAPI.unfollowUser(userId)
+    if (resultCode === 0) {
+        dispatch(followUnfollow(userId))
+    }
+    dispatch(followingInProgressAC(false, userId))
 }
 
 
