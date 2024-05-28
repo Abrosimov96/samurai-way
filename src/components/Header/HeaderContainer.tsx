@@ -2,17 +2,13 @@ import React from 'react'
 import {Header} from './Header';
 import {RootReducerType} from '../../redux/redux-store';
 import {connect} from 'react-redux';
-import {AuthDataType, authMeAC} from '../../redux/auth-reducer';
-import {authMeAPI} from '../../api/api';
+import {authMe} from '../../redux/auth-reducer';
 
 export type HeaderContainerPropsType = MapStateToPropsType & MapDispatchToPropsType
 
 class HeaderContainer extends React.Component<HeaderContainerPropsType, any> {
     async componentDidMount() {
-        const {resultCode, data} = await authMeAPI.authMeResponse()
-        if (resultCode === 0) {
-            this.props.authMeAC({...data, isAuth: true})
-        }
+        this.props.authMe()
     }
 
     render() {
@@ -21,7 +17,7 @@ class HeaderContainer extends React.Component<HeaderContainerPropsType, any> {
 }
 
 type MapDispatchToPropsType = {
-    authMeAC: (me: AuthDataType) => void
+    authMe: () => void
 }
 type MapStateToPropsType = {
     isAuth: boolean
@@ -33,4 +29,4 @@ const mapStateToProps = (state: RootReducerType): MapStateToPropsType => ({
     login: state.authMe.login
 })
 
-export const HeadersContainer = connect(mapStateToProps, {authMeAC})(HeaderContainer)
+export const HeadersContainer = connect(mapStateToProps, {authMe})(HeaderContainer)

@@ -1,3 +1,6 @@
+import {Dispatch} from 'redux';
+import {authMeAPI} from '../api/api';
+
 export type AuthDataType = {
     id: number
     email: string
@@ -5,12 +8,7 @@ export type AuthDataType = {
     isAuth: boolean
 }
 
-const initialState: AuthDataType = {
-    id: 1,
-    email: 'aaa@ss.ru',
-    login: 'Viper',
-    isAuth: false
-}
+const initialState = {} as AuthDataType
 type AuthActionType = AuthMeACType
 export const authReducer = (state: AuthDataType = initialState, action: AuthActionType): AuthDataType => {
     switch (action.type) {
@@ -34,3 +32,9 @@ export const authMeAC = (me: AuthDataType) => {
     } as const
 }
 
+export const authMe = () => async (dispatch: Dispatch) => {
+    const {resultCode, data} = await authMeAPI.authMeResponse()
+    if (resultCode === 0) {
+        dispatch(authMeAC({...data, isAuth: true}))
+    }
+}

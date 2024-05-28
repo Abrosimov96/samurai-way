@@ -1,46 +1,44 @@
 import React from 'react'
 import {Profile} from './Profile';
-import axios from 'axios';
 import {connect} from 'react-redux';
 import {RootReducerType} from '../../redux/redux-store';
-import {setUserProfileAC} from '../../redux/profile-reducer';
+import {getUserProfile} from '../../redux/profile-reducer';
 import {UserProfile} from '../../redux/store';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 export type ProfileContainerPropsType = MapStateToPropsType & MapDispatchToPropsType
 
-class ProfileContainer extends React.Component<PropsType, any>{
+class ProfileContainer extends React.Component<PropsType, any> {
 
     componentDidMount() {
-        const userId = this.props.match.params.userId
-        axios
-            .get(`https://social-network.samuraijs.com/api/1.0/profile/${userId ? userId : ''}`)
-            .then(response => {
-                this.props.setUserProfileAC(response.data)
-            })
+        let userId = this.props.match.params.userId
+        if (!userId) userId = (30975).toString()
+        this.props.getUserProfile(userId)
     }
 
     render() {
         return (
-            <Profile {...this.props} userProfile={this.props.userProfile} />
+            <Profile {...this.props} userProfile={this.props.userProfile}/>
         )
     }
 }
 
 type MapDispatchToPropsType = {
-    setUserProfileAC: (profile: UserProfile) => void
+    getUserProfile: (userId: string) => void
 }
 type MapStateToPropsType = {
-    userProfile: UserProfile
+    userProfile: UserProfile | null
+    userId: number
 }
 
-const mapStateToProps = (state: RootReducerType):MapStateToPropsType => ({
-    userProfile: state.profilePage.userProfile
+const mapStateToProps = (state: RootReducerType): MapStateToPropsType => ({
+    userProfile: state.profilePage.userProfile,
+    userId: state.authMe.id
 })
-type PathParamsType ={
+type PathParamsType = {
     userId: string
 }
 type PropsType = RouteComponentProps<PathParamsType> & ProfileContainerPropsType
 const WithURLDataContainerComponent = withRouter(ProfileContainer)
 
-export default connect(mapStateToProps, {setUserProfileAC})(WithURLDataContainerComponent)
+export default connect(mapStateToProps, {getUserProfile})(WithURLDataContainerComponent)

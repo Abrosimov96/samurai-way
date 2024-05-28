@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 import {UserType} from '../redux/users-reducer';
+import {UserProfile} from '../redux/store';
 
 type AuthMeAPIType = {
     email: string
@@ -44,8 +45,12 @@ export const userAPI = {
         const res = await instance
             .delete<ResponseType>(`/follow/${userID}`);
         return res.data;
-    }
-
+    },
+    async getProfileInfo (userID: string){
+        const res = await instance
+            .get<UserProfile>(`/profile/${userID}`);
+        return res.data;
+    },
 }
 
 export const authMeAPI = {

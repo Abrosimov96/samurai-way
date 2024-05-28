@@ -2,7 +2,6 @@ import React from 'react'
 import logo from '../../logo.jpg'
 import classes from './Header.module.css'
 import {NavLink} from 'react-router-dom';
-import {HeaderContainerPropsType} from './HeaderContainer';
 
 export const Header = (props: any) => <header className={classes.header}>
     <img

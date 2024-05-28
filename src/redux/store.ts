@@ -33,7 +33,7 @@ export type UserProfile = {
 export type ProfilePageType = {
     posts: PostPropsType[]
     newPostText: string
-    userProfile: UserProfile
+    userProfile: UserProfile | null
 }
 export type DialogsPage = {
     messages: MessageType[]
