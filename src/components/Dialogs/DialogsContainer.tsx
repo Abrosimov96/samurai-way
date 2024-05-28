@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {RootReducerType} from '../../redux/redux-store';
 import {DialogsPage} from '../../redux/store';
 import {Dispatch} from 'redux';
+import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 
 export type DialogType = {
     id: number
@@ -42,5 +43,7 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => {
         }
     }
 }
+const AuthRedirectComponent = withAuthRedirect(Dialogs)
 
-export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(Dialogs)
+export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(AuthRedirectComponent)
+// export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(Dialogs)
